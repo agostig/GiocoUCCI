@@ -13,7 +13,7 @@ public class SalaBackground extends BaseActor {
 
          */
         String[] filenames =
-                {"sala-telefono.png"};
+                {"sala-telefono.png", "sala-telefono-scura.png"};
 
 
         loadAnimationFromFiles(filenames, 1f, true);
