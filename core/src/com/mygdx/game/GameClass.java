@@ -39,6 +39,12 @@ public class GameClass extends GameBeta {
 	private Chairs chairs1;
 	private Chairs chairs2;
 	private Chairs chairs3;
+	private Wall wall1;
+	private Wall wall2;
+	private Wall wall3;
+	private Wall wall4;
+	private Wall wall5;
+
 
 	@Override
 	public void initialize () {
@@ -55,10 +61,25 @@ public class GameClass extends GameBeta {
 
 		player = new Player(50, 50, mainStage);
 
+		//COLLISIONI
 		screen = new Screen(252, 0, mainStage);
 		chairs1 = new Chairs(400, 320, mainStage);
 		chairs2 = new Chairs(400, 570, mainStage);
 		chairs3 = new Chairs(400, 810, mainStage);
+
+
+		wall1 = new Wall(0, 0, mainStage);
+		wall2 = new Wall(Gdx.graphics.getWidth() - 30, 0, mainStage);
+		wall3 = new Wall(0, Gdx.graphics.getHeight() - 30, mainStage);
+		wall3.setWidth(Gdx.graphics.getWidth());
+		wall3.setHeight(20);
+		wall3.setBoundaryRectangle();
+		wall4 = new Wall(0,0, mainStage);
+		wall4.setWidth(Gdx.graphics.getWidth());
+		wall4.setHeight(20);
+		wall4.setBoundaryRectangle();
+
+
 
 
 		//BUTTONS
@@ -186,6 +207,9 @@ public class GameClass extends GameBeta {
 
 		for(BaseActor chairActor : BaseActor.getList(mainStage, "Chairs"))
 			player.preventOverlap(chairActor);
+
+		for(BaseActor wallActor : BaseActor.getList(mainStage, "Wall"))
+			player.preventOverlap(wallActor);
 
 	}
 	
