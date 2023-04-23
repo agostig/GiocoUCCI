@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import java.util.Random;
@@ -29,7 +31,11 @@ public class GameClass extends GameBeta {
     private Button buttonLeft;
     private Button buttonTop;
     private Button buttonBottom;
-    private TextButton.TextButtonStyle textButtonStyle;
+    private TextButton.TextButtonStyle textButtonStyle_right;
+    private TextButton.TextButtonStyle textButtonStyle_left;
+    private TextButton.TextButtonStyle textButtonStyle_up;
+    private TextButton.TextButtonStyle textButtonStyle_down;
+
 
     //BOUNDARIES
     private Screen screen;
@@ -101,7 +107,9 @@ public class GameClass extends GameBeta {
     Random rand;
     int randomNum;
     Enemy x;
-    int punteggio = 0;
+    int score = 0;
+    private SpriteBatch sb;
+    private BitmapFont font;
 
 
     @Override
@@ -109,6 +117,18 @@ public class GameClass extends GameBeta {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
         Gdx.input.setInputProcessor(mainStage);
+
+        /*  SCORE
+        sb = new SpriteBatch();
+        FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("font-pixel.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 200;
+        parameter.color = Color.WHITE;
+
+        font = gen.generateFont(parameter);
+         */
+
+
 
 
         //gameViewport = new FitViewport(1024, 1024);
@@ -156,14 +176,12 @@ public class GameClass extends GameBeta {
         x.setPosition(x.getPosX(), x.getPosY());
 
 
-
-
         //BUTTONS
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
 
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameters = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameters.size = 48;
-        fontParameters.color = Color.WHITE;
+        fontParameters.color = Color.CLEAR;
         fontParameters.borderWidth = 2;
         fontParameters.borderColor = Color.BLACK;
         fontParameters.borderStraight = true;
@@ -172,16 +190,41 @@ public class GameClass extends GameBeta {
 
         BitmapFont customFont = fontGenerator.generateFont(fontParameters);
 
-        textButtonStyle = new TextButton.TextButtonStyle();
-        Texture buttonTex = new Texture(Gdx.files.internal("badlogic.jpg"));
-        NinePatch buttonPatch = new NinePatch(buttonTex, 24, 24, 24, 24);
-        textButtonStyle.up = new NinePatchDrawable(buttonPatch);
-        textButtonStyle.font = customFont;
-        textButtonStyle.fontColor = Color.GRAY;
+        //RIGHT BUTTON
+        textButtonStyle_right = new TextButton.TextButtonStyle();
+        Texture buttonTex_right = new Texture(Gdx.files.internal("right-button.png"));
+        NinePatch buttonPatch_right = new NinePatch(buttonTex_right, 24, 24, 24, 24);
+        textButtonStyle_right.up = new NinePatchDrawable(buttonPatch_right);
+        textButtonStyle_right.font = customFont;
+        textButtonStyle_right.fontColor = Color.GRAY;
 
-        buttonRight = new TextButton("RIGHT", textButtonStyle);
-        buttonRight.setSize(20 * 4, 50);
-        buttonRight.setPosition(10 * 7, Gdx.graphics.getHeight() - 20 * 3);
+        //LEFT BUTTON
+        textButtonStyle_left = new TextButton.TextButtonStyle();
+        Texture buttonTex_left = new Texture(Gdx.files.internal("left-button.png"));
+        NinePatch buttonPatch_left = new NinePatch(buttonTex_left, 24, 24, 24, 24);
+        textButtonStyle_left.up = new NinePatchDrawable(buttonPatch_left);
+        textButtonStyle_left.font = customFont;
+        textButtonStyle_left.fontColor = Color.GRAY;
+        //UP BUTTON
+        textButtonStyle_up = new TextButton.TextButtonStyle();
+        Texture buttonTex_up = new Texture(Gdx.files.internal("up-button.png"));
+        NinePatch buttonPatch_up = new NinePatch(buttonTex_up, 24, 24, 24, 24);
+        textButtonStyle_up.up = new NinePatchDrawable(buttonPatch_up);
+        textButtonStyle_up.font = customFont;
+        textButtonStyle_up.fontColor = Color.GRAY;
+        //DOWN BUTTON
+        textButtonStyle_down = new TextButton.TextButtonStyle();
+        Texture buttonTex_down = new Texture(Gdx.files.internal("down-button.png"));
+        NinePatch buttonPatch_down = new NinePatch(buttonTex_down, 24, 24, 24, 24);
+        textButtonStyle_down.up = new NinePatchDrawable(buttonPatch_down);
+        textButtonStyle_down.font = customFont;
+        textButtonStyle_down.fontColor = Color.GRAY;
+
+
+
+        buttonRight = new TextButton(" ", textButtonStyle_right);
+        buttonRight.setSize(200, 200);
+        buttonRight.setPosition(Gdx.graphics.getWidth() - 220, 100);
         //buttonRight.setPosition(10*7,Gdx.graphics.getHeight()*baseHRatio-20*3);
         buttonRight.addListener(new InputListener() {
             @Override
@@ -200,9 +243,9 @@ public class GameClass extends GameBeta {
 
         });
 
-        buttonLeft = new TextButton("LEFT", textButtonStyle);
-        buttonLeft.setSize(20 * 4, 50);
-        buttonLeft.setPosition(10 * 7, Gdx.graphics.getHeight() - 50 * 3);
+        buttonLeft = new TextButton(" ", textButtonStyle_left);
+        buttonLeft.setSize(200, 200);
+        buttonLeft.setPosition(Gdx.graphics.getWidth() - 380, 100);
         //buttonLeft.setPosition(10*7,Gdx.graphics.getHeight()*baseHRatio-50*3);
         buttonLeft.addListener(new InputListener() {
             @Override
@@ -220,9 +263,9 @@ public class GameClass extends GameBeta {
             }
         });
 
-        buttonTop = new TextButton("TOP", textButtonStyle);
-        buttonTop.setSize(20 * 4, 50);
-        buttonTop.setPosition(10 * 7, Gdx.graphics.getHeight() - 80 * 3);
+        buttonTop = new TextButton(" ", textButtonStyle_up);
+        buttonTop.setSize(200, 200);
+        buttonTop.setPosition((Gdx.graphics.getWidth() - 296), 200);
         //buttonTop.setPosition(10*7,Gdx.graphics.getHeight()*baseHRatio-80*3);
         buttonTop.addListener(new InputListener() {
             @Override
@@ -240,9 +283,9 @@ public class GameClass extends GameBeta {
             }
         });
 
-        buttonBottom = new TextButton("BOTTOM", textButtonStyle);
-        buttonBottom.setSize(20 * 4, 50);
-        buttonBottom.setPosition(10 * 7, Gdx.graphics.getHeight() - 110 * 3);
+        buttonBottom = new TextButton(" ", textButtonStyle_down);
+        buttonBottom.setSize(200, 200);
+        buttonBottom.setPosition((Gdx.graphics.getWidth() - 296), 10);
         //buttonBottom.setPosition(10*7,Gdx.graphics.getHeight()*baseHRatio-110*3);
         buttonBottom.addListener(new InputListener() {
             @Override
@@ -264,6 +307,8 @@ public class GameClass extends GameBeta {
         mainStage.addActor(buttonLeft);
         mainStage.addActor(buttonTop);
         mainStage.addActor(buttonBottom);
+
+
         //gameViewport.getCamera().position.set(player.getX(), player.getY(), 0);
     }
 
@@ -277,6 +322,15 @@ public class GameClass extends GameBeta {
 
     @Override
     public void update(float dt) {
+
+        /*      SCORE
+        sb.setColor(1,1,1,1);
+        sb.begin();
+        font.draw(sb, Integer.toString(player.getScore()), 400, 600);
+        sb.end();
+         */
+
+
 
         for (BaseActor screenActor : BaseActor.getList(mainStage, "Screen"))
             player.preventOverlap(screenActor);
@@ -309,10 +363,11 @@ public class GameClass extends GameBeta {
 
             	x = enemyList[randomNum];
 	            x.setPosition(x.getPosX(), x.getPosY());
-            	punteggio++;
+            	score++;
+                player.addScore();
         	}
 
-        	if (punteggio == 10) {
+        	if (score == 10) {
                 x.collect();
             	BaseActor youWinMessage = new BaseActor(0, 0, mainStage);
             	youWinMessage.loadTexture("you-win.png");

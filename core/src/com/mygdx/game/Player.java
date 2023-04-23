@@ -17,6 +17,7 @@ public class Player extends BaseActor{
     private int spostamento=50;
 
     private float deltaT = 0;
+    private int score;
 
 
     //TEXTURE ANIMAZIONI
@@ -42,6 +43,14 @@ public class Player extends BaseActor{
     Animation<TextureRegion>  runBack;
 
 
+    public int getScore() {
+        return score;
+    }
+
+    public void addScore(){
+        score++;
+    }
+
     public Player(float x, float y, Stage s)
     {
         super(x,y,s);
@@ -58,7 +67,7 @@ public class Player extends BaseActor{
         setBoundaryPolygon(8);
 
         setDirection(Player.IDLE);
-
+        score = 0;
 
 
         //Begin 3.4.
