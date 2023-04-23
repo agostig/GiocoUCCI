@@ -8,12 +8,10 @@ public class SalaBackground extends BaseActor {
     {
         super(x,y,s);
 
-        /*String[] filenames =
-                {"sala2.png", "sala3.png"};
 
-         */
         String[] filenames =
-                {"sala-telefono.png", "sala-telefono-scura.png"};
+                //{"sala-telefono.png", "sala-telefono-scura.png"};
+                {"sala-telefono.png"};
 
 
         loadAnimationFromFiles(filenames, 1f, true);
