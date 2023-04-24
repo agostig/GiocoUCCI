@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.Timer;
 
 import java.util.Random;
 
@@ -89,6 +90,8 @@ public class GameClass extends GameBeta {
             {"persona-2-popcorn-1(arancio).png", "persona-2-popcorn-2(arancio).png"};
 
 
+
+
     //TEXTURE REGION NEMICI
     Animation<TextureRegion> persona1_tel;
     Animation<TextureRegion> persona2_tel;
@@ -102,14 +105,34 @@ public class GameClass extends GameBeta {
     Animation<TextureRegion> persona2_pop;
     Animation<TextureRegion> persona2_pop_arancio;
 
+
     //SPAWN NEMICI
     private Enemy[] enemyList;
     Random rand;
     int randomNum;
     Enemy x;
-    int score = 0;
-    private SpriteBatch sb;
-    private BitmapFont font;
+    private int score = 0;
+
+    //SCORE
+    Score score0;
+    Score score1;
+    Score score2;
+    Score score3;
+    Score score4;
+    Score score5;
+    Score score6;
+    Score score7;
+    Score score8;
+    Score score9;
+    Score score10;
+
+    //HIT
+    boolean hit = false;
+
+
+
+
+
 
 
     @Override
@@ -131,7 +154,7 @@ public class GameClass extends GameBeta {
 
 
 
-        //gameViewport = new FitViewport(1024, 1024);
+
 
         salaBackground = new SalaBackground(0, 0, mainStage);
         salaBackground.setWidth(Gdx.graphics.getWidth());
@@ -175,8 +198,67 @@ public class GameClass extends GameBeta {
         x = enemyList[randomNum];
         x.setPosition(x.getPosX(), x.getPosY());
 
+        //SCORE
+        score0 = new Score(50, 860, mainStage, "score-0.png");
+        score0.setWidth(250);
+        score0.setHeight(140);
 
-        //BUTTONS
+        score1 = new Score(-400, -400, mainStage, "score-1.png");
+        score1.setWidth(250);
+        score1.setHeight(140);
+
+        score2 = new Score(-400, -400, mainStage, "score-2.png");
+        score2.setWidth(250);
+        score2.setHeight(140);
+
+        score3 = new Score(-400, -400, mainStage, "score-3.png");
+        score3.setWidth(250);
+        score3.setHeight(140);
+
+        score4 = new Score(-400, -400, mainStage, "score-4.png");
+        score4.setWidth(250);
+        score4.setHeight(140);
+
+        score5 = new Score(-400, -400, mainStage, "score-5.png");
+        score5.setWidth(250);
+        score5.setHeight(140);
+
+        score6 = new Score(-400, -400, mainStage, "score-6.png");
+        score6.setWidth(250);
+        score6.setHeight(140);
+
+        score7 = new Score(-400, -400, mainStage, "score-7.png");
+        score7.setWidth(250);
+        score7.setHeight(140);
+
+        score8 = new Score(-400, -400, mainStage, "score-8.png");
+        score8.setWidth(250);
+        score8.setHeight(140);
+
+        score9 = new Score(-400, -400, mainStage, "score-9.png");
+        score9.setWidth(250);
+        score9.setHeight(140);
+
+        score10 = new Score(-400, -400, mainStage, "score-10.png");
+        score10.setWidth(250);
+        score10.setHeight(140);
+
+
+
+        /*
+        sb = new SpriteBatch();
+        FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("font-pixel.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter fontPar = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontPar.color = Color.WHITE;
+        fontPar.size = 100;
+        font = gen.generateFont(fontPar);
+         */
+
+
+
+
+
+        //BUTTONS FONT
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
 
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameters = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -323,13 +405,13 @@ public class GameClass extends GameBeta {
     @Override
     public void update(float dt) {
 
-        /*      SCORE
+
+        /*
         sb.setColor(1,1,1,1);
         sb.begin();
-        font.draw(sb, Integer.toString(player.getScore()), 400, 600);
+        font.draw(sb, "SCORE: " + score, 400, 600);
         sb.end();
          */
-
 
 
         for (BaseActor screenActor : BaseActor.getList(mainStage, "Screen"))
@@ -344,42 +426,96 @@ public class GameClass extends GameBeta {
 
 
 
+        if (player.overlaps(x) && !x.isCollected()) {
+            player.hit=true;
+            score++;
+            x.setPosition(-200, -200);
+            int temp = randomNum;
+            randomNum = rand.nextInt((enemyList.length));
+
+            while (temp == randomNum) {
+                randomNum = rand.nextInt((enemyList.length));
+            }
+
+            x = enemyList[randomNum];
+            x.setPosition(x.getPosX(), x.getPosY());
+
+        }
+
         /*
-        if (player.overlaps(enemy1) && !enemy1.isCollected()) {
-			enemy1.collect();
-			enemy2.setPosition(840, 530);
-		}
+        case 0:
+                score0 = new Score(400, 10, mainStage, "score-0.png");
+                score0.setWidth(200);
+                score0.setHeight(100);
+
+                //score0.centerAtPosition(500, 600);
+                break;
          */
 
+        switch(score){
+            case 1:
+                score0.addAction(Actions.removeActor());
+                score1.setPosition(50, 860);
+                break;
+            case 2:
+                score1.addAction(Actions.removeActor());
+                score2.setPosition(50, 860);
+                break;
+            case 3:
+                score2.addAction(Actions.removeActor());
+                score3.setPosition(50, 860);
+                break;
+            case 4:
+                score3.addAction(Actions.removeActor());
+                score4.setPosition(50, 860);
+                break;
+            case 5:
+                score4.addAction(Actions.removeActor());
+                score5.setPosition(50, 860);
+                break;
+            case 6:
+                score5.addAction(Actions.removeActor());
+                score6.setPosition(50, 860);
+                break;
+            case 7:
+                score6.addAction(Actions.removeActor());
+                score7.setPosition(50, 860);
+                break;
+            case 8:
+                score7.addAction(Actions.removeActor());
+                score8.setPosition(50, 860);
+                break;
+            case 9:
+                score8.addAction(Actions.removeActor());
+                score9.setPosition(50, 860);
+                break;
+            case 10:
+                score9.addAction(Actions.removeActor());
+                score10.setPosition(50, 860);
+                break;
+        }
 
-        if (player.overlaps(x) && !x.isCollected()) {
-            	x.setPosition(-200, -200);
-            	int temp = randomNum;
-            	randomNum = rand.nextInt((enemyList.length));
 
-           		 while (temp == randomNum) {
-                	randomNum = rand.nextInt((enemyList.length));
-           		 }
 
-            	x = enemyList[randomNum];
-	            x.setPosition(x.getPosX(), x.getPosY());
-            	score++;
-                player.addScore();
-        	}
 
-        	if (score == 10) {
+
+
+        if (score == 10) {
                 x.collect();
-            	BaseActor youWinMessage = new BaseActor(0, 0, mainStage);
-            	youWinMessage.loadTexture("you-win.png");
-            	youWinMessage.centerAtPosition(400, 300);
-            	youWinMessage.setOpacity(0);
-            	youWinMessage.addAction(Actions.delay(1));
-            	youWinMessage.addAction(Actions.after(Actions.fadeIn(1)));
+                BaseActor youWinMessage = new BaseActor(0, 0, mainStage);
+                youWinMessage.loadTexture("hai-vinto-1.png");
+                youWinMessage.centerAtPosition(1000, 450);
+                youWinMessage.setWidth(1000);
+                youWinMessage.setHeight(1000);
+                youWinMessage.setOpacity(0);
+                youWinMessage.addAction(Actions.delay(1));
+                youWinMessage.addAction(Actions.after(Actions.fadeIn(1)));
+                score++;
         	}
+
 
 
 		}
-
 
 
 

@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 
 public class BaseActor extends Actor
@@ -99,6 +100,12 @@ public class BaseActor extends Actor
 
     }
 
+    public void collect()
+    {
+        clearActions();
+        addAction( Actions.fadeOut(1) );
+        addAction( Actions.after( Actions.removeActor() ) );
+    }
 
     //Begin 1.3.
     public void setAnimationPaused(boolean pause)

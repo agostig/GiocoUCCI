@@ -2,8 +2,11 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Timer;
 
 public class Player extends BaseActor{
 
@@ -18,11 +21,12 @@ public class Player extends BaseActor{
 
     private float deltaT = 0;
     private int score;
+    boolean hit = false;
 
 
     //TEXTURE ANIMAZIONI
     String[] still =
-            {"player-front.png"};
+            {"player-front.png", "player-front-2.png"};
     private String[] right =
             {"player-run-right-1.png", "player-run-right-2.png"};
     private String[] left =
@@ -31,6 +35,9 @@ public class Player extends BaseActor{
             {"player-run-forward-1.png", "player-run-forward-2.png"};
     private String[] back =
             {"player-run-back-1.png", "player-run-back-2.png"};
+
+    private String[] playerHit =
+            {"player-hit-1.png", "player-hit-2.png"};
 
 
 
@@ -41,6 +48,8 @@ public class Player extends BaseActor{
     Animation<TextureRegion>  runLeft;
     Animation<TextureRegion>  runForward;
     Animation<TextureRegion>  runBack;
+    Animation<TextureRegion>  hitRegion;
+    private float animationTime = 0;
 
 
     public int getScore() {
@@ -56,18 +65,20 @@ public class Player extends BaseActor{
         super(x,y,s);
 
 
-        playerStill = loadAnimationFromFiles(still, 0.1f, true);
+        playerStill = loadAnimationFromFiles(still, 0.4f, true);
         runRight = loadAnimationFromFiles(right, 0.4f, true);
         runLeft = loadAnimationFromFiles(left, 0.4f, true);
         runForward = loadAnimationFromFiles(forward, 0.4f, true);
         runBack = loadAnimationFromFiles(back, 0.4f, true);
+        hitRegion = loadAnimationFromFiles(playerHit, 0.5f, false);
 
         //End 2.0.
 
         setBoundaryPolygon(8);
 
         setDirection(Player.IDLE);
-        score = 0;
+
+
 
 
         //Begin 3.4.
@@ -87,37 +98,6 @@ public class Player extends BaseActor{
         super.act(dt);
 
 
-        /*
-        //DA USERE NEL GIOCO
-        if(direction==Player.LEFT)
-        {
-            this.moveBy(-spostamento, 0);
-            setDirection(Player.IDLE);
-        }
-        else if(direction==Player.TOP)
-        {
-            this.moveBy(0, spostamento);
-            setDirection(Player.IDLE);
-        }
-        else if(direction==Player.RIGHT)
-        {
-            this.moveBy(spostamento, 0);
-            setDirection(Player.IDLE);
-//            deltaT += dt;
-//            Gdx.app.log("#dt", String.valueOf(dt));
-//            Gdx.app.log("#deltaT", String.valueOf(deltaT));
-//            Gdx.app.log("#x", String.valueOf(this.getX()));
-//            //if(deltaT > 0.333)
-//                //setDirection(Turtle.IDLE);
-//            if(deltaT > 1)
-
-        }
-        else if(direction==Player.BOTTOM)
-        {
-            this.moveBy(0, -spostamento);
-            setDirection(Player.IDLE);
-        }
-         */
 
         if(direction==Player.LEFT){
             setAnimation(runLeft);
@@ -139,10 +119,17 @@ public class Player extends BaseActor{
             setAnimation(playerStill);
         }
 
+        /*
+        if(hit){
+            setAnimation(hitRegion);
+
+        }
+         */
+
 
         applyPhysics(dt);
 
-        setAnimationPaused( !isMoving() );
+        //setAnimationPaused( !isMoving() );
 
 
         //if ( getSpeed() > 0 )
