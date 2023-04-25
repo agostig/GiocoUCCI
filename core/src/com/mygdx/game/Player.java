@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 
 public class Player extends BaseActor{
@@ -49,7 +50,10 @@ public class Player extends BaseActor{
     Animation<TextureRegion>  runForward;
     Animation<TextureRegion>  runBack;
     Animation<TextureRegion>  hitRegion;
-    private float animationTime = 0;
+
+
+    long startTime;
+    long elapsedTime;
 
 
     public int getScore() {
@@ -65,12 +69,15 @@ public class Player extends BaseActor{
         super(x,y,s);
 
 
+
+
+
         playerStill = loadAnimationFromFiles(still, 0.4f, true);
         runRight = loadAnimationFromFiles(right, 0.4f, true);
         runLeft = loadAnimationFromFiles(left, 0.4f, true);
         runForward = loadAnimationFromFiles(forward, 0.4f, true);
         runBack = loadAnimationFromFiles(back, 0.4f, true);
-        hitRegion = loadAnimationFromFiles(playerHit, 0.5f, false);
+        hitRegion = loadAnimationFromFiles(playerHit, 1f, false);
 
         //End 2.0.
 
@@ -118,13 +125,16 @@ public class Player extends BaseActor{
         else if(direction==Player.IDLE){
             setAnimation(playerStill);
         }
-
         /*
+        startTime = TimeUtils.millis();
+        elapsedTime = TimeUtils.timeSinceMillis(startTime);
+
         if(hit){
             setAnimation(hitRegion);
-
         }
          */
+
+
 
 
         applyPhysics(dt);

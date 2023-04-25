@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 
 import java.util.Random;
@@ -62,6 +63,9 @@ public class GameClass extends GameBeta {
     private Enemy enemy9;
     private Enemy enemy10;
     private Enemy enemy11;
+    private Enemy enemy12;
+    private Enemy enemy13;
+    private Enemy enemy14;
 
     //ANIMAZIONI NEMICI
 
@@ -88,6 +92,12 @@ public class GameClass extends GameBeta {
             {"persona-2-popcorn-1.png", "persona-2-popcorn-2.png"};
     private String[] persona2popcornArancio =
             {"persona-2-popcorn-1(arancio).png", "persona-2-popcorn-2(arancio).png"};
+    private String[] persona1talking =
+            {"persona-1-talking-1.png", "persona-1-talking-2.png"};
+    private String[] persona2talking =
+            {"persona-2-talking-1.png", "persona-2-talking-2.png"};
+    private String[] persona3talking =
+            {"persona-3-talking-1.png", "persona-3-talking-2.png"};
 
 
 
@@ -104,6 +114,9 @@ public class GameClass extends GameBeta {
     Animation<TextureRegion> persona1_pop_arancio;
     Animation<TextureRegion> persona2_pop;
     Animation<TextureRegion> persona2_pop_arancio;
+    Animation<TextureRegion> persona1_talk;
+    Animation<TextureRegion> persona2_talk;
+    Animation<TextureRegion> persona3_talk;
 
 
     //SPAWN NEMICI
@@ -128,7 +141,9 @@ public class GameClass extends GameBeta {
 
     //HIT
     boolean hit = false;
-
+    long startTime = TimeUtils.millis();
+    long elapsedTime = TimeUtils.timeSinceMillis(startTime);
+    private long lastDropTime;
 
 
 
@@ -191,7 +206,11 @@ public class GameClass extends GameBeta {
                                     enemy8 = new Enemy(-400, -400, mainStage, persona1_pop_blu, persona1popcornBlu, 492, 279),
                                     enemy9 = new Enemy(-400, -400, mainStage, persona1_pop_arancio, persona1popcornArancio, 608, 528),
                                     enemy10 = new Enemy(-400, -400, mainStage, persona2_pop, persona2popcorn, 957, 528),
-                                    enemy11 = new Enemy(-400, -400, mainStage, persona2_pop_arancio, persona2popcornArancio, 726, 769)};
+                                    enemy11 = new Enemy(-400, -400, mainStage, persona2_pop_arancio, persona2popcornArancio, 726, 769),
+                                    enemy12 = new Enemy(-400, 400, mainStage, persona1_talk, persona1talking, 1074, 279),
+                                    enemy13 = new Enemy(-400, -400, mainStage, persona2_talk, persona2talking, 1655, 528),
+                                    enemy14 = new Enemy(-400, -400, mainStage, persona3_talk, persona3talking, 1655, 279)};
+
 
         rand = new Random();
         randomNum = rand.nextInt((enemyList.length));
@@ -401,6 +420,17 @@ public class GameClass extends GameBeta {
 	}
 
 	 */
+    public void spawnEnemy(){
+        int temp = randomNum;
+        randomNum = rand.nextInt((enemyList.length));
+
+        while (temp == randomNum) {
+            randomNum = rand.nextInt((enemyList.length));
+        }
+
+        x = enemyList[randomNum];
+        x.setPosition(x.getPosX(), x.getPosY());
+    }
 
     @Override
     public void update(float dt) {
@@ -424,23 +454,19 @@ public class GameClass extends GameBeta {
             player.preventOverlap(wallActor);
 
 
+        /*
 
+         */
 
-        if (player.overlaps(x) && !x.isCollected()) {
-            player.hit=true;
+        if (player.overlaps(x)) {
+            player.hit = true;
             score++;
             x.setPosition(-200, -200);
-            int temp = randomNum;
-            randomNum = rand.nextInt((enemyList.length));
-
-            while (temp == randomNum) {
-                randomNum = rand.nextInt((enemyList.length));
-            }
-
-            x = enemyList[randomNum];
-            x.setPosition(x.getPosX(), x.getPosY());
+            spawnEnemy();
 
         }
+
+
 
         /*
         case 0:
@@ -508,9 +534,9 @@ public class GameClass extends GameBeta {
                 youWinMessage.setWidth(1000);
                 youWinMessage.setHeight(1000);
                 youWinMessage.setOpacity(0);
-                youWinMessage.addAction(Actions.delay(1));
                 youWinMessage.addAction(Actions.after(Actions.fadeIn(1)));
                 score++;
+
         	}
 
 

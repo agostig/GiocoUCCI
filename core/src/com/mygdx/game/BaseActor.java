@@ -82,6 +82,9 @@ public class BaseActor extends Actor
         //End 3.1.
     }
 
+    public float getElapsedTime() {
+        return elapsedTime;
+    }
 
     //Creare diverse timeline e richiamare setAnimation diverse volte
     public void setAnimation(Animation<TextureRegion> anim)
