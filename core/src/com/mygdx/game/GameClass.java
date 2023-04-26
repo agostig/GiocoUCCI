@@ -37,6 +37,8 @@ public class GameClass extends GameBeta {
     private TextButton.TextButtonStyle textButtonStyle_left;
     private TextButton.TextButtonStyle textButtonStyle_up;
     private TextButton.TextButtonStyle textButtonStyle_down;
+    private Button buttonReplay;
+    private TextButton.TextButtonStyle textButtonStyle_replay;
 
 
     //BOUNDARIES
@@ -66,6 +68,8 @@ public class GameClass extends GameBeta {
     private Enemy enemy12;
     private Enemy enemy13;
     private Enemy enemy14;
+
+    private HaiVinto haiVinto;
 
     //ANIMAZIONI NEMICI
 
@@ -98,7 +102,12 @@ public class GameClass extends GameBeta {
             {"persona-2-talking-1.png", "persona-2-talking-2.png"};
     private String[] persona3talking =
             {"persona-3-talking-1.png", "persona-3-talking-2.png"};
+   /*
 
+    private String[] haiVintoAnim=
+            {"haivinto1.png", "haivinto2.png", "haivinto3.png", "haivinto4.png", "haivinto5.png", "haivinto6.png",};
+
+    */
 
 
 
@@ -117,6 +126,7 @@ public class GameClass extends GameBeta {
     Animation<TextureRegion> persona1_talk;
     Animation<TextureRegion> persona2_talk;
     Animation<TextureRegion> persona3_talk;
+    Animation<TextureRegion> hai_vinto;
 
 
     //SPAWN NEMICI
@@ -124,7 +134,7 @@ public class GameClass extends GameBeta {
     Random rand;
     int randomNum;
     Enemy x;
-    private int score = 0;
+    int score = 0;
 
     //SCORE
     Score score0;
@@ -141,11 +151,16 @@ public class GameClass extends GameBeta {
 
     //HIT
     boolean hit = false;
+
+    /*
     long startTime = TimeUtils.millis();
     long elapsedTime = TimeUtils.timeSinceMillis(startTime);
     private long lastDropTime;
 
+     */
 
+    BitmapFont customFont;
+    BaseActor youWinMessage1;
 
 
 
@@ -165,9 +180,6 @@ public class GameClass extends GameBeta {
 
         font = gen.generateFont(parameter);
          */
-
-
-
 
 
 
@@ -217,6 +229,8 @@ public class GameClass extends GameBeta {
         x = enemyList[randomNum];
         x.setPosition(x.getPosX(), x.getPosY());
 
+
+
         //SCORE
         score0 = new Score(50, 860, mainStage, "score-0.png");
         score0.setWidth(250);
@@ -264,19 +278,6 @@ public class GameClass extends GameBeta {
 
 
 
-        /*
-        sb = new SpriteBatch();
-        FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("font-pixel.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter fontPar = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontPar.color = Color.WHITE;
-        fontPar.size = 100;
-        font = gen.generateFont(fontPar);
-         */
-
-
-
-
-
         //BUTTONS FONT
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
 
@@ -289,7 +290,7 @@ public class GameClass extends GameBeta {
         fontParameters.minFilter = Texture.TextureFilter.Linear;
         fontParameters.magFilter = Texture.TextureFilter.Linear;
 
-        BitmapFont customFont = fontGenerator.generateFont(fontParameters);
+        customFont = fontGenerator.generateFont(fontParameters);
 
         //RIGHT BUTTON
         textButtonStyle_right = new TextButton.TextButtonStyle();
@@ -409,6 +410,31 @@ public class GameClass extends GameBeta {
         mainStage.addActor(buttonTop);
         mainStage.addActor(buttonBottom);
 
+        //WIN MESSAGE
+        //haiVinto = new HaiVinto(-3000, -3000, mainStage, hai_vinto, haiVintoAnim, 0,0);
+
+
+        youWinMessage1 = new BaseActor(-3000, -3000, mainStage);
+        youWinMessage1.loadTexture("Hai_vinto.png");
+        youWinMessage1.setWidth(Gdx.graphics.getWidth());
+        youWinMessage1.setHeight(Gdx.graphics.getHeight());
+
+        //REPLAY BUTTON
+        textButtonStyle_replay = new TextButton.TextButtonStyle();
+        Texture buttonTex_replay = new Texture(Gdx.files.internal("replay.png"));
+        NinePatch buttonPatch_replay = new NinePatch(buttonTex_replay, 24, 24, 24, 24);
+        textButtonStyle_replay.up = new NinePatchDrawable(buttonPatch_replay);
+        textButtonStyle_replay.font = customFont;
+        textButtonStyle_replay.fontColor = Color.GRAY;
+
+        buttonReplay = new TextButton(" ", textButtonStyle_replay);
+        buttonReplay.setPosition(-200, -200);
+        buttonReplay.setSize(200, 200);
+
+
+        mainStage.addActor(buttonReplay);
+
+
 
         //gameViewport.getCamera().position.set(player.getX(), player.getY(), 0);
     }
@@ -432,16 +458,79 @@ public class GameClass extends GameBeta {
         x.setPosition(x.getPosX(), x.getPosY());
     }
 
+    public void replay(){
+
+        buttonReplay.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.log("#INFO", "Press a Button");
+                player.setDirection(Player.IDLE);
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.log("#INFO", "Pressed Text Button");
+                player.setPosition(0,0);
+                buttonReplay.setPosition(-200,-200);
+                youWinMessage1.setPosition(-3000,-3000);
+                score0.setPosition(50, 860);
+                spawnEnemy();
+                return true;
+            }
+
+        });
+    }
+
+
+    public void updateScore(int score){
+
+        switch(score){
+            case 1:
+                score0.setPosition(-500,-500);
+                score1.setPosition(50, 860);
+                break;
+            case 2:
+                score1.setPosition(-500,-500);
+                score2.setPosition(50, 860);
+                break;
+            case 3:
+                score2.setPosition(-500,-500);
+                score3.setPosition(50, 860);
+                break;
+            case 4:
+                score3.setPosition(-500,-500);
+                score4.setPosition(50, 860);
+                break;
+            case 5:
+                score4.setPosition(-500,-500);
+                score5.setPosition(50, 860);
+                break;
+            case 6:
+                score5.setPosition(-500,-500);
+                score6.setPosition(50, 860);
+                break;
+            case 7:
+                score6.setPosition(-500,-500);
+                score7.setPosition(50, 860);
+                break;
+            case 8:
+                score7.setPosition(-500,-500);
+                score8.setPosition(50, 860);
+                break;
+            case 9:
+                score8.setPosition(-500,-500);
+                score9.setPosition(50, 860);
+                break;
+            case 10:
+                score9.setPosition(-500,-500);
+                score10.setPosition(50, 860);
+                break;
+        }
+    }
+
     @Override
     public void update(float dt) {
 
-
-        /*
-        sb.setColor(1,1,1,1);
-        sb.begin();
-        font.draw(sb, "SCORE: " + score, 400, 600);
-        sb.end();
-         */
 
 
         for (BaseActor screenActor : BaseActor.getList(mainStage, "Screen"))
@@ -454,95 +543,25 @@ public class GameClass extends GameBeta {
             player.preventOverlap(wallActor);
 
 
-        /*
-
-         */
 
         if (player.overlaps(x)) {
             player.hit = true;
             score++;
             x.setPosition(-200, -200);
+            updateScore(score);
             spawnEnemy();
-
         }
 
 
-
-        /*
-        case 0:
-                score0 = new Score(400, 10, mainStage, "score-0.png");
-                score0.setWidth(200);
-                score0.setHeight(100);
-
-                //score0.centerAtPosition(500, 600);
-                break;
-         */
-
-        switch(score){
-            case 1:
-                score0.addAction(Actions.removeActor());
-                score1.setPosition(50, 860);
-                break;
-            case 2:
-                score1.addAction(Actions.removeActor());
-                score2.setPosition(50, 860);
-                break;
-            case 3:
-                score2.addAction(Actions.removeActor());
-                score3.setPosition(50, 860);
-                break;
-            case 4:
-                score3.addAction(Actions.removeActor());
-                score4.setPosition(50, 860);
-                break;
-            case 5:
-                score4.addAction(Actions.removeActor());
-                score5.setPosition(50, 860);
-                break;
-            case 6:
-                score5.addAction(Actions.removeActor());
-                score6.setPosition(50, 860);
-                break;
-            case 7:
-                score6.addAction(Actions.removeActor());
-                score7.setPosition(50, 860);
-                break;
-            case 8:
-                score7.addAction(Actions.removeActor());
-                score8.setPosition(50, 860);
-                break;
-            case 9:
-                score8.addAction(Actions.removeActor());
-                score9.setPosition(50, 860);
-                break;
-            case 10:
-                score9.addAction(Actions.removeActor());
-                score10.setPosition(50, 860);
-                break;
+        if (score == 1) {
+            x.setPosition(-200,-200);
+            score = 0;
+            score1.setPosition(-500,-500);
+            youWinMessage1.setPosition(0, 0);
+            buttonReplay.setPosition(1000, 50);
+            replay();
         }
-
-
-
-
-
-
-        if (score == 10) {
-                x.collect();
-                BaseActor youWinMessage = new BaseActor(0, 0, mainStage);
-                youWinMessage.loadTexture("hai-vinto-1.png");
-                youWinMessage.centerAtPosition(1000, 450);
-                youWinMessage.setWidth(1000);
-                youWinMessage.setHeight(1000);
-                youWinMessage.setOpacity(0);
-                youWinMessage.addAction(Actions.after(Actions.fadeIn(1)));
-                score++;
-
-        	}
-
-
-
-		}
-
+    }
 
 
 

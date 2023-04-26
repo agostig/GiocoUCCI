@@ -89,8 +89,8 @@ public class Player extends BaseActor{
 
 
         //Begin 3.4.
-        setAcceleration(400);
-        setMaxSpeed(400);
+        setAcceleration(500);
+        setMaxSpeed(500);
         setDeceleration(5000);
         //End 3.4.*/
     }
@@ -125,6 +125,8 @@ public class Player extends BaseActor{
         else if(direction==Player.IDLE){
             setAnimation(playerStill);
         }
+
+
         /*
         startTime = TimeUtils.millis();
         elapsedTime = TimeUtils.timeSinceMillis(startTime);
