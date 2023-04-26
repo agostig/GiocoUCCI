@@ -553,10 +553,10 @@ public class GameClass extends GameBeta {
         }
 
 
-        if (score == 1) {
+        if (score == 10) {
             x.setPosition(-200,-200);
             score = 0;
-            score1.setPosition(-500,-500);
+            score10.setPosition(-500,-500);
             youWinMessage1.setPosition(0, 0);
             buttonReplay.setPosition(1000, 50);
             replay();
