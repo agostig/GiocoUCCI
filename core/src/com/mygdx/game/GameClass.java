@@ -20,12 +20,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 
+import java.sql.Time;
 import java.util.Random;
+
+import javax.swing.text.View;
 
 public class GameClass extends GameBeta {
 
     private Player player;
-    //private FitViewport gameViewport;
     private SalaBackground salaBackground;
 
     //BUTTONS
@@ -69,11 +71,9 @@ public class GameClass extends GameBeta {
     private Enemy enemy13;
     private Enemy enemy14;
 
-    private HaiVinto haiVinto;
+
 
     //ANIMAZIONI NEMICI
-
-
     private String[] persona1telefono =
             {"persona-1-telefono-1.png", "persona-1-telefono-2.png"};
     private String[] persona1telefonoViola =
@@ -104,10 +104,9 @@ public class GameClass extends GameBeta {
             {"persona-3-talking-1.png", "persona-3-talking-2.png"};
 
     private String[] haiVintoAnim=
-            {"haivinto1.png", "haivinto2.png", "haivinto3.png", "haivinto4.png", "haivinto5.png", "haivinto6.png",};
-
-
-
+            {"haivinto1.png", "haivinto2.png", "haivinto3.png", "haivinto4.png", "haivinto5.png", "haivinto6.png"};
+    private String[] haiPersoAnim=
+            {"game_over1.png", "game_over2.png", "game_over3.png", "game_over4.png", "game_over5.png", "game_over6.png"};
 
 
     //TEXTURE REGION NEMICI
@@ -126,7 +125,7 @@ public class GameClass extends GameBeta {
     Animation<TextureRegion> persona2_talk;
     Animation<TextureRegion> persona3_talk;
     Animation<TextureRegion> hai_vinto;
-
+    Animation<TextureRegion> hai_perso;
 
     //SPAWN NEMICI
     private Enemy[] enemyList;
@@ -134,6 +133,9 @@ public class GameClass extends GameBeta {
     int randomNum;
     Enemy x;
     int score = 0;
+    Time time;
+
+
 
     //SCORE
     Score score0;
@@ -148,21 +150,18 @@ public class GameClass extends GameBeta {
     Score score9;
     Score score10;
 
-    //HIT
-    boolean hit = false;
 
     /*
     long startTime = TimeUtils.millis();
     long elapsedTime = TimeUtils.timeSinceMillis(startTime);
     private long lastDropTime;
-
      */
 
     BitmapFont customFont;
-    BaseActor youWinMessage1;
-    Timer timer;
-
-
+    //BaseActor youWinMessage1;
+    private HaiVinto haiVinto;
+    private HaiVinto haiPerso;
+    float delay = 60;
 
 
     @Override
@@ -416,11 +415,19 @@ public class GameClass extends GameBeta {
         haiVinto.setHeight(Gdx.graphics.getHeight());
         haiVinto.setAnimationPaused(true);
 
+        //LOSE MESSAGE
+        haiPerso = new HaiVinto(-3000, -3000, mainStage, hai_perso, haiPersoAnim, 0,0);
+        haiPerso.setWidth(Gdx.graphics.getWidth());
+        haiPerso.setHeight(Gdx.graphics.getHeight());
+        haiPerso.setAnimationPaused(true);
 
+        /*
         youWinMessage1 = new BaseActor(-3000, -3000, mainStage);
         youWinMessage1.loadTexture("Hai_vinto.png");
         youWinMessage1.setWidth(Gdx.graphics.getWidth());
         youWinMessage1.setHeight(Gdx.graphics.getHeight());
+
+         */
 
         //REPLAY BUTTON
         textButtonStyle_replay = new TextButton.TextButtonStyle();
@@ -438,22 +445,8 @@ public class GameClass extends GameBeta {
         mainStage.addActor(buttonReplay);
 
 
-
-        //TIMER
-        timer = new Timer();
-        timer.start();
-
-
-
-        //gameViewport.getCamera().position.set(player.getX(), player.getY(), 0);
     }
 
-	/*
-	@Override
-	public void resize(int width, int height) {
-		gameViewport.update(width, height);
-	}
-	 */
 
     public void spawnEnemy(){
         x.setPosition(-200, -200);
@@ -544,8 +537,6 @@ public class GameClass extends GameBeta {
     @Override
     public void update(float dt) {
 
-
-
         for (BaseActor screenActor : BaseActor.getList(mainStage, "Screen"))
             player.preventOverlap(screenActor);
 
@@ -555,6 +546,15 @@ public class GameClass extends GameBeta {
         for (BaseActor wallActor : BaseActor.getList(mainStage, "Wall"))
             player.preventOverlap(wallActor);
 
+        Timer.schedule(new Timer.Task(){
+            @Override
+            public void run() {
+                if(score != 10){
+                    haiPerso.setPosition(0,0);
+                    haiPerso.setAnimationPaused(false);
+                }
+            }
+        }, delay);
 
 
         if (player.overlaps(x)) {
@@ -563,7 +563,6 @@ public class GameClass extends GameBeta {
             updateScore(score);
             spawnEnemy();
         }
-
 
 
         if (score == 10) {
@@ -575,8 +574,8 @@ public class GameClass extends GameBeta {
             buttonReplay.setPosition(1000, 50);
             replay();
         }
-    }
 
+    }
 
 
     @Override

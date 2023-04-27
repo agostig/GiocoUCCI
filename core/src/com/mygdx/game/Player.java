@@ -9,16 +9,17 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 
-public class Player extends BaseActor{
 
-    public final static int IDLE=0;
-    public final static int LEFT=1;
-    public final static int TOP=2;
-    public final static int RIGHT=3;
-    public final static int BOTTOM=4;
+public class Player extends BaseActor {
 
-    private int direction=0;
-    private int spostamento=50;
+    public final static int IDLE = 0;
+    public final static int LEFT = 1;
+    public final static int TOP = 2;
+    public final static int RIGHT = 3;
+    public final static int BOTTOM = 4;
+
+    private int direction = 0;
+    private int spostamento = 50;
 
     private float deltaT = 0;
     private int score;
@@ -37,39 +38,38 @@ public class Player extends BaseActor{
     private String[] back =
             {"player-run-back-1.png", "player-run-back-2.png"};
 
+    /*
     private String[] playerHit =
             {"player-hit-1.png", "player-hit-2.png"};
 
-
-
+     */
+    private String[] playerHit =
+            {"player-hit-2.png"};
 
     //TEXTURE REGION ANIMAZIONI
-    Animation<TextureRegion>  playerStill;
-    Animation<TextureRegion>  runRight;
-    Animation<TextureRegion>  runLeft;
-    Animation<TextureRegion>  runForward;
-    Animation<TextureRegion>  runBack;
-    Animation<TextureRegion>  hitRegion;
+    Animation<TextureRegion> playerStill;
+    Animation<TextureRegion> runRight;
+    Animation<TextureRegion> runLeft;
+    Animation<TextureRegion> runForward;
+    Animation<TextureRegion> runBack;
+    Animation<TextureRegion> hitRegion;
 
 
     long startTime;
     long elapsedTime;
+    float delay = 1;
 
 
     public int getScore() {
         return score;
     }
 
-    public void addScore(){
+    public void addScore() {
         score++;
     }
 
-    public Player(float x, float y, Stage s)
-    {
-        super(x,y,s);
-
-
-
+    public Player(float x, float y, Stage s) {
+        super(x, y, s);
 
 
         playerStill = loadAnimationFromFiles(still, 0.4f, true);
@@ -77,15 +77,13 @@ public class Player extends BaseActor{
         runLeft = loadAnimationFromFiles(left, 0.4f, true);
         runForward = loadAnimationFromFiles(forward, 0.4f, true);
         runBack = loadAnimationFromFiles(back, 0.4f, true);
-        hitRegion = loadAnimationFromFiles(playerHit, 1f, false);
+        hitRegion = loadAnimationFromFiles(playerHit, 0.1f, false);
 
         //End 2.0.
 
         setBoundaryPolygon(8);
 
         setDirection(Player.IDLE);
-
-
 
 
         //Begin 3.4.
@@ -95,56 +93,65 @@ public class Player extends BaseActor{
         //End 3.4.*/
     }
 
-    public void setDirection(int d)
-    {
-        direction=d;
+    public void setDirection(int d) {
+        direction = d;
     }
 
-    public void act(float dt)
-    {
+    public void act(float dt) {
         super.act(dt);
 
 
-
-        if(direction==Player.LEFT){
+        if (direction == Player.LEFT) {
             setAnimation(runLeft);
             accelerateAtAngle(180);
-        }
-        else if(direction==Player.TOP){
+        } else if (direction == Player.TOP) {
             setAnimation(runBack);
             accelerateAtAngle(90);
-        }
-        else if(direction==Player.RIGHT){
+        } else if (direction == Player.RIGHT) {
             setAnimation(runRight);
             accelerateAtAngle(0);
-        }
-        else if(direction==Player.BOTTOM){
+        } else if (direction == Player.BOTTOM) {
             setAnimation(runForward);
             accelerateAtAngle(270);
         }
-        else if(direction==Player.IDLE){
-            setAnimation(playerStill);
+        else if (direction == Player.IDLE) {
+            if (!hit) {
+                setAnimation(playerStill);
+            } else {
+                setAnimation(hitRegion);
+                Timer.schedule(new Timer.Task(){
+                    @Override
+                    public void run() {
+                        hit = false;
+                    }
+                }, delay);
+            }
         }
+        applyPhysics(dt);
+    }
+}
 
 
-        /*
-        startTime = TimeUtils.millis();
+
+
+
+
+
+        /*startTime = TimeUtils.millis();
         elapsedTime = TimeUtils.timeSinceMillis(startTime);
 
         if(hit){
             setAnimation(hitRegion);
-        }
-         */
+            hit = false;
+        }*/
 
 
 
 
-        applyPhysics(dt);
+
 
         //setAnimationPaused( !isMoving() );
 
 
         //if ( getSpeed() > 0 )
           //  setRotation( getMotionAngle() );
-    }
-}
