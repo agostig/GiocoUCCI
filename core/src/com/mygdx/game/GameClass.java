@@ -102,12 +102,11 @@ public class GameClass extends GameBeta {
             {"persona-2-talking-1.png", "persona-2-talking-2.png"};
     private String[] persona3talking =
             {"persona-3-talking-1.png", "persona-3-talking-2.png"};
-   /*
 
     private String[] haiVintoAnim=
             {"haivinto1.png", "haivinto2.png", "haivinto3.png", "haivinto4.png", "haivinto5.png", "haivinto6.png",};
 
-    */
+
 
 
 
@@ -161,6 +160,7 @@ public class GameClass extends GameBeta {
 
     BitmapFont customFont;
     BaseActor youWinMessage1;
+    Timer timer;
 
 
 
@@ -411,7 +411,10 @@ public class GameClass extends GameBeta {
         mainStage.addActor(buttonBottom);
 
         //WIN MESSAGE
-        //haiVinto = new HaiVinto(-3000, -3000, mainStage, hai_vinto, haiVintoAnim, 0,0);
+        haiVinto = new HaiVinto(-3000, -3000, mainStage, hai_vinto, haiVintoAnim, 0,0);
+        haiVinto.setWidth(Gdx.graphics.getWidth());
+        haiVinto.setHeight(Gdx.graphics.getHeight());
+        haiVinto.setAnimationPaused(true);
 
 
         youWinMessage1 = new BaseActor(-3000, -3000, mainStage);
@@ -436,6 +439,12 @@ public class GameClass extends GameBeta {
 
 
 
+        //TIMER
+        timer = new Timer();
+        timer.start();
+
+
+
         //gameViewport.getCamera().position.set(player.getX(), player.getY(), 0);
     }
 
@@ -444,9 +453,10 @@ public class GameClass extends GameBeta {
 	public void resize(int width, int height) {
 		gameViewport.update(width, height);
 	}
-
 	 */
+
     public void spawnEnemy(){
+        x.setPosition(-200, -200);
         int temp = randomNum;
         randomNum = rand.nextInt((enemyList.length));
 
@@ -472,7 +482,8 @@ public class GameClass extends GameBeta {
                 Gdx.app.log("#INFO", "Pressed Text Button");
                 player.setPosition(0,0);
                 buttonReplay.setPosition(-200,-200);
-                youWinMessage1.setPosition(-3000,-3000);
+                haiVinto.setPosition(-3000, -3000);
+                //youWinMessage1.setPosition(-3000,-3000);
                 score0.setPosition(50, 860);
                 spawnEnemy();
                 return true;
@@ -480,6 +491,7 @@ public class GameClass extends GameBeta {
 
         });
     }
+
 
 
     public void updateScore(int score){
@@ -528,6 +540,7 @@ public class GameClass extends GameBeta {
         }
     }
 
+
     @Override
     public void update(float dt) {
 
@@ -547,17 +560,18 @@ public class GameClass extends GameBeta {
         if (player.overlaps(x)) {
             player.hit = true;
             score++;
-            x.setPosition(-200, -200);
             updateScore(score);
             spawnEnemy();
         }
 
 
+
         if (score == 10) {
-            x.setPosition(-200,-200);
             score = 0;
             score10.setPosition(-500,-500);
-            youWinMessage1.setPosition(0, 0);
+            haiVinto.setPosition(0,0);
+            haiVinto.setAnimationPaused(false);
+            //youWinMessage1.setPosition(0, 0);
             buttonReplay.setPosition(1000, 50);
             replay();
         }

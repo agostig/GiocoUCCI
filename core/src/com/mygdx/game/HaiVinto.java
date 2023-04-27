@@ -20,7 +20,7 @@ public class HaiVinto extends BaseActor{
         this.posX = posX;
         this.posY = posY;
 
-        textureRegionAnimation = loadAnimationFromFiles(animazioni, 0.5f, true);
+        textureRegionAnimation = loadAnimationFromFiles(animazioni, 0.2f, false);
         setAnimation(textureRegionAnimation);
     }
 
